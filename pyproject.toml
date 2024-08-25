@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "src"
+version = "0.1.0"
+description = ""
+authors = ["Ernane Sena <ernane.sena@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12.*"
+boto3 = "^1.35.5"
+redis = "^5.0.8"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pytest-cov = "^5.0.0"
+taskipy = "^1.13.0"
+ruff = "^0.6.2"
+httpx = "^0.27.0"
+moto = {extras = ["all"], version = "^5.0.13"}
+pytest-redis = "^3.1.2"
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+redis_ports = "6379"
+redis_host = "redis-server"
+redis_start = true 
+
+[tool.taskipy.tasks]
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'
+run = 'fastapi dev scr/app.py'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=src -vv'
+post_test = 'coverage html'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,32 @@
+version: "3.4"
+services:
+  ml-model-serve-api:
+    tty: true
+    image: "ml-model-serve-api"
+    stdin_open: true
+    environment:
+      - REDIS_HOST=ml-model-serve-api-cache
+    build:
+      context: .
+      target: "development"
+    command: "--action=api"
+    volumes:
+      - ".:/src"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ml-model-serve-api-cache
+    networks:
+      - ml-model-serve-api-network
+  
+  ml-model-serve-api-cache:
+    image: redis:7.2-alpine
+    container_name: ml-model-serve-api-cache
+    ports:
+      - 6379:6379
+    networks:
+      - ml-model-serve-api-network
+
+networks:
+  ml-model-serve-api-network:
+    driver: bridge
