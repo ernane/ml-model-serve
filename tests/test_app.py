@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from src.fastapi_app import app
 
 
-def test_root_ok_and_health():
+def test_root_ok_and_health(aws_credentials):
     client = TestClient(app)
 
     response = client.get('/')
