@@ -20,4 +20,4 @@ docker/lint:
 	$(DOCKER_COMPOSE) run ${API_NAME} poetry run task lint
 
 docker/test:
-	$(DOCKER_COMPOSE) run ${API_NAME} poetry run task test
+	$(DOCKER_COMPOSE) AWS_DEFAULT_REGION=us-east-1 run ${API_NAME} poetry run task test
